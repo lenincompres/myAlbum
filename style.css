@@ -1,0 +1,209 @@
+/* CSS Document */
+
+::-webkit-scrollbar {
+ width: 6px;
+ height: 6px;
+}
+::-webkit-scrollbar-button {
+ width: 0px;
+ height: 0px;
+}
+::-webkit-scrollbar-thumb {
+ background-color: white;
+ border: 0px none white;
+ border-radius: 50px;
+}
+::-webkit-scrollbar-thumb:hover {
+ background-color: white;
+}
+::-webkit-scrollbar-thumb:active {
+ background-color: white;
+}
+::-webkit-scrollbar-track {
+ background-color: lightslategray;
+ border: 0px none lightslategray;
+ border-radius: 50px;
+}
+::-webkit-scrollbar-track:hover {
+ background-color: lightslategray;
+}
+::-webkit-scrollbar-track:active {
+ background-color: lightslategray;
+}
+::-webkit-scrollbar-corner {
+ background: transparent;
+}
+/* */
+
+body {
+	font-family: '33535gillsansmt', Gill Sans, Gill Sans MT, Myriad Pro, DejaVu Sans Condensed, Helvetica, Arial, " sans-serif";
+	font-size: 16.4px;
+	width: 100%;
+	max-width: 21em;
+	margin: 0 auto;
+}
+main {
+	padding: 0;
+	box-shadow: lightslategray 0 0 6px;
+	margin: 0;
+}
+section {
+	position: relative;
+	padding: .5em 0;
+}
+h1 {
+	text-align: center;
+	font-size: 1.25em;
+	padding: .25em 0 0;
+	margin: 0;
+	font-weight: normal;
+}
+h2 {
+	text-align: center;
+	font-size: .86em;
+	font-weight: normal;
+	padding: 0;
+	margin: 0;
+}
+p {
+	margin: 0;
+	padding-bottom: .3em;
+}
+a, #tracklist li {
+	cursor: pointer;
+	text-decoration: none;
+}
+footer {
+	font-size: .75em;
+	padding: .5em;
+}
+#audio {
+	width: 100%;
+	display: none;
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	z-index: 10;
+}
+#video {
+	transition-timing-function: ease-in-out;
+	transition-duration: 1s;
+	box-shadow: lightslategray 0 0 6px
+}
+/* track links */
+
+#tracklist {
+	list-style-type: none;
+	margin: 0;
+	padding: 0 .0 .5em;
+}
+#tracklist li {
+	padding: 0 3em;
+	width: 15em;
+	display: block;
+	position: relative;
+}
+#tracklist span {
+	font-size: .68em;
+	font-style: normal;
+}
+#tracklist a span {
+	display: block;
+	padding-left: 1.5em;
+	font-style: italic;
+	font-size: .86em;
+}
+#tracklist .cover:after, #leyend .cover:before {
+	content: '\2019';
+	padding: 0 .15em;
+	font-size: 16.4px;
+}
+.active .cover:after {
+	display: none;
+}
+/* lyrics */
+#lyrics {
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 0;
+	height: 32.25em;
+	overflow-x: hidden;
+	overflow-y: auto;
+	white-space: nowrap;
+	transition-timing-function: ease-in-out;
+	transition-duration: 1s;
+}
+#lyrics.active {
+	width: 100%;
+}
+#lyrics>div {
+	padding: 0 1em 1em;
+	display: block;
+}
+#lyrics p {
+	padding: .33em 0;
+	font-size: .86em;
+}
+.button {
+	cursor: pointer;
+	position: absolute;
+	right: 0;
+	top: 0;
+	padding: .5em;
+	display: none;
+	font-style: normal;
+}
+.active .button, #lyrics.active .button {
+	display: block;
+}
+.button#stop, .button#close {
+	right: auto;
+	left: 0;
+}
+/* colors */
+
+html {
+	background-color: whitesmoke;
+}
+main, #video {
+	background-color: white;
+}
+#lyrics {
+	background-color: aliceblue;
+}
+a, #tracklist li, #tracklist span {
+	color: steelblue;
+}
+#tracklist li.active {
+	background-color: steelblue;
+}
+#tracklist a span {
+	color: lightsteelblue;
+}
+body {
+	color: slategray;
+}
+.chorus, #lyrics h2, #lyrics h1 {
+	color: darkslategray;
+}
+#tracklist li.active, #tracklist li.active a {
+	color: white;
+}
+#tracklist a.cover span, #tracklist .cover:after, footer .cover, #lyrics .cover {
+	color: goldenrod;
+}
+
+/* hover only on computer screens */
+
+@media only screen and (min-device-width : 768px) {
+#tracklist li:hover, #tracklist li.active:hover {
+	background-color: aliceblue;
+}
+a:hover, #tracklist li:hover a {
+	color: #23415a;
+}
+#tracklist li.active:hover a {
+	color: steelblue;
+}
+}
