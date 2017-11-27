@@ -1,0 +1,57 @@
+{
+  "album": {
+    "title": "Lenino, el Cantacuentos",
+    "tracks": [
+      {
+        "title": "Historias de encanto",
+        "original": "Tale of Wonder (Jeff Mach)",
+        "cover": true
+      },
+      {
+        "title": "Felices por siempre",
+        "original": "Happy Together (The Turtles)",
+        "cover": true
+      },
+      {
+        "title": "No, corazón",
+        "original": "Hold Heart (Emiliana Torrini)",
+        "cover": true
+      },
+      {
+        "title": "Cicatrices misteriosas",
+        "original": "Mystery Scars (Happy Birthday Amy)",
+        "cover": true
+      },
+      {
+        "title": "Casa en un árbol",
+        "original": "The Treehouse Song (Ane Brun)",
+        "cover": true
+      },
+      {
+        "title": "Un cómo te va",
+        "original": "Replay"
+      },
+      {
+        "title": "La Celestina",
+        "original": "(Lhasa de Sela)",
+        "cover": true
+      },
+      {
+        "title": "Tréfles",
+        "original": "Clovers"
+      },
+      {
+        "title": "Pa' no querer",
+        "original": "Not Going There"
+      },
+      {
+        "title": "Mal me traes tú",
+        "original": "Mad About You (Hooverphonics)"
+      },
+      {
+        "title": "Tú me enloqueces",
+        "original": "You Make Me Happy"
+      }
+    ]
+  }
+}
