@@ -12,7 +12,7 @@
 
   var audio = document.getElementById('audio');
   var videoH = $('#video').width() * 9 / 16;
-	$("#video").attr('height', videoH);
+  $("#video").attr('height', videoH);
 
   var stopAudio = function() {
     if (activeSong === null) {
@@ -24,8 +24,8 @@
     audio.pause();
     $('#audio').hide();
     $("#video").attr('height', videoH);
+    //open video
     setTimeout(function() {
-			//open video
       $("#video").attr('height', videoH);
     }, 1000);
   }
@@ -37,8 +37,8 @@
     audio.addEventListener('ended', playNext);
     audio.play();
     $('#audio').show();
-		//close video
-	  $("#video").attr('height', 0);
+    //close video
+    $("#video").attr('height', 0);
   }
 
   var playNext = function() {
