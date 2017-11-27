@@ -1,92 +1,90 @@
-// JavaScript Document
+/**
+ * @file handling the album playlist
+ * @author Lenin Compres <lenincompres@gmail.com>
+ * @version 0.1
+ **/
 
 'use strict';
 
-var audio = document.getElementById('audio');
-var currentsong = -1;
-$('#tracklist li').each(function () {
-	var n = $('#tracklist li').index(this) + 1;
-	n = n > 9 ? "" + n : "0" + n;
-	$(this).prepend('<span>' + n + ' - </span>');
-}).click(function () {
-	var index = $('#tracklist li').index(this);
-	if (index === currentsong) {
-		return;
-	}
-	var a = $(this).find('a').first();
-	playAudio('songs/' + a.text().toLocaleLowerCase() + '.mp3');
-	$(this).addClass('active');
-	currentsong = index;
-	checkLyrics(a.text());
-	var alt = a.attr('alt');
-	if (alt) {
-		a.append('<span>' + alt + '</span>');
-	}
-});
+(function() {
 
-function stopAudio() {
-	$('.active a span').remove();
-	$('li.active').removeClass('active');
-	audio.removeEventListener('ended', playNext);
-	audio.pause();
-	$('#audio').hide();
+  /* audio and video functions */
+
+  var audio = document.getElementById('audio');
+  var videoH = $('#video').width() * 9 / 16;
 	$("#video").attr('height', videoH);
-	setTimeout(function(){openVideo();}, 1000);
-}
 
-function playAudio(url) {
-	stopAudio();
-	audio.src = url;
-	$('#audio-container').show();
-	audio.addEventListener('ended', playNext);
-	audio.play();
-	$('#audio').show();
-	closeVideo();
-}
+  var stopAudio = function() {
+    if (activeSong === null) {
+      return;
+    }
+    activeSong.removeClass('active');
+    activeSong = null;
+    audio.removeEventListener('ended', playNext);
+    audio.pause();
+    $('#audio').hide();
+    $("#video").attr('height', videoH);
+    setTimeout(function() {
+			//open video
+      $("#video").attr('height', videoH);
+    }, 1000);
+  }
 
-function playNext() {
-	console.log(currentsong);
-	$('#tracklist li').eq(currentsong + 1).click();
-}
+  var playAudio = function(url) {
+    stopAudio();
+    audio.src = url;
+    $('#audio-container').show();
+    audio.addEventListener('ended', playNext);
+    audio.play();
+    $('#audio').show();
+		//close video
+	  $("#video").attr('height', 0);
+  }
 
-/*  */
-function checkLyrics(s) {
-	$('li.active').append($('#stop').detach());
-	$('#lyrics>div').load('lyrics/' + s.toLowerCase().replace(/ /g, "%20") + '.html', function (data, status) {
-		if (status !== 'error') {
-			$('li.active').append($('#info').detach());
-		}
-	});
-}
+  var playNext = function() {
+    $('#tracklist li').eq(activeSong.attr("index")).click();
+  }
 
-function openLyrics() {
-	$('#lyrics').addClass('active');
-}
+  /* controls */
 
-function closeLyrics() {
-	$('#lyrics').removeClass('active');
-}
+  var activeSong = null;
+  var index = 1;
+  $('#tracklist li').each(function() {
+    //adds the index number in front of the track name
+    let i = index > 9 ? "" + index : "0" + index;
+    $(this).prepend('<span>' + i + ' - </span>').attr("index", index++);
+  }).click(function() {
+    if (!$(this).hasClass('active')) {
+      //play the song
+      let a = $(this).find('a').first();
+      let t = a.text();
+      playAudio('songs/' + t.toLocaleLowerCase() + '.mp3');
+      $(this).addClass('active').append($('#stop').detach());
+      activeSong = $(this);
+      //set lyrics
+      $('#lyrics>div').first().load('lyrics/' + t.toLowerCase().replace(/ /g, "%20") + '.html', function(data, status) {
+        if (status !== 'error') {
+          $('li.active').append($('#info').detach());
+        }
+      });
+    }
+  });
 
-$('#stop').click(function () {
-	setTimeout(function () {
-		stopAudio();
-		currentsong = -1;
-	}, 10);
-});
-$('#info').click(openLyrics);
-$('#lyrics').append($('#close').detach());
-$('#close').click(closeLyrics);
+  $('#stop').click(function() {
+    setTimeout(function() {
+      stopAudio();
+    }, 10);
+  });
 
-/*  */
-var videoH = $('#video').width() * 9 / 16;
-openVideo();
+  $('#info').click(function() {
+    $('#lyrics').addClass('active');
+  });
 
-function openVideo() {
-	if (audio.paused) {
-		$("#video").attr('height', videoH);
-	}
-}
+  $('#close').click(function() {
+    $('#lyrics').removeClass('active');
+  });
 
-function closeVideo() {
-	$("#video").attr('height', 0);
-}
+  //make sure the lyrics page has the height of the tracklist
+  $('#lyrics').height($('main').height());
+
+})();
