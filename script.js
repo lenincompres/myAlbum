@@ -8,83 +8,87 @@
 
 (function() {
 
-  /* audio and video functions */
-
   var audio = document.getElementById('audio');
-  var videoH = $('#video').width() * 9 / 16;
-  $("#video").attr('height', videoH);
+  var tracklist = $('#tracklist li');
+  var audioContainer = $('#audio').first(),
+    lyricsContainer = $('#lyrics').first(),
+    videoContainer = $("#video").first();
+  var videoH = videoContainer.width() * 9 / 16;
+  var stopBtn = $('#stop').first(),
+    infoBtn = $('#info').first(),
+    closeBtn = $('#close').first();
+  var activeSong = null;
+  videoContainer.attr('height', videoH);
 
-  var stopAudio = function() {
-    if (activeSong === null) {
-      return;
-    }
-    activeSong.removeClass('active');
-    activeSong = null;
-    audio.removeEventListener('ended', playNext);
-    audio.pause();
-    $('#audio').hide();
-    $("#video").attr('height', videoH);
-    //open video
-    setTimeout(function() {
-      $("#video").attr('height', videoH);
-    }, 1000);
-  }
-
-  var playAudio = function(url) {
-    stopAudio();
-    audio.src = url;
-    $('#audio-container').show();
-    audio.addEventListener('ended', playNext);
-    audio.play();
-    $('#audio').show();
-    //close video
-    $("#video").attr('height', 0);
-  }
+  /* auxiliary functions */
 
   var playNext = function() {
-    $('#tracklist li').eq(activeSong.attr("index")).click();
+    let i = parseInt(activeSong.attr("index"));
+    console.log(tracklist.length, i);
+    if (i < tracklist.length) {
+      tracklist.eq(i).click();
+    } else {
+      stopBtn.click();
+    }
   }
+  audio.addEventListener('ended', playNext);
 
   /* controls */
 
-  var activeSong = null;
   var index = 1;
-  $('#tracklist li').each(function() {
+  tracklist.each(function() {
     //adds the index number in front of the track name
-    let i = index > 9 ? "" + index : "0" + index;
-    $(this).prepend('<span>' + i + ' - </span>').attr("index", index++);
-  }).click(function() {
-    if (!$(this).hasClass('active')) {
-      //play the song
-      let a = $(this).find('a').first();
-      let t = a.text();
-      playAudio('songs/' + t.toLocaleLowerCase() + '.mp3');
-      $(this).addClass('active').append($('#stop').detach());
-      activeSong = $(this);
-      //set lyrics
-      $('#lyrics>div').first().load('lyrics/' + t.toLowerCase().replace(/ /g, "%20") + '.html', function(data, status) {
-        if (status !== 'error') {
-          $('li.active').append($('#info').detach());
+    let i = index > 9 ? index : "0" + index;
+    let song = $(this);
+    song.prepend('<span>' + i + ' - </span>').attr("index", index++)
+      .click(function() {
+        if (!song.hasClass('active')) {
+
+          //switch active song
+          if (activeSong !== null) {
+            activeSong.removeClass('active');
+          }
+          activeSong = song.addClass('active').append(stopBtn.detach());
+          let title = song.find('a').first().text();
+
+          //play song
+          audio.pause();
+          audio.src = 'songs/' + title.toLocaleLowerCase() + '.mp3';
+          audio.play();
+          audioContainer.show();
+          videoContainer.attr('height', 0);
+
+          //load lyrics
+          lyricsContainer.find('div').first()
+            .load('lyrics/' + title.toLowerCase().replace(/ /g, "%20") + '.html', function(data, status) {
+              if (status !== 'error') {
+                activeSong.append(infoBtn.detach());
+              }
+            });
         }
       });
-    }
   });
 
-  $('#stop').click(function() {
+  stopBtn.click(function() {
+    videoContainer.attr('height', videoH);
     setTimeout(function() {
-      stopAudio();
+      activeSong.removeClass('active');
+      activeSong = null;
+      audio.removeEventListener('ended', playNext);
+      audio.pause();
+      audioContainer.hide();
     }, 10);
   });
 
-  $('#info').click(function() {
-    $('#lyrics').addClass('active');
+  infoBtn.click(function() {
+    lyricsContainer.addClass('active');
   });
 
-  $('#close').click(function() {
-    $('#lyrics').removeClass('active');
+  closeBtn.click(function() {
+    lyricsContainer.removeClass('active');
   });
 
   //make sure the lyrics page has the height of the tracklist
-  $('#lyrics').height($('main').height());
+  lyricsContainer.height($('main').height());
 
 })();
