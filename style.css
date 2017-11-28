@@ -12,6 +12,7 @@ body {
 }
 
 main {
+  position: relative;
   padding: 0;
   box-shadow: lightslategray 0 0 6px;
   margin: 0;
@@ -62,6 +63,18 @@ footer {
   bottom: 0;
   left: 0;
   z-index: 10;
+}
+
+#loader {
+  transition-timing-function: ease-in-out;
+  transition-duration: 1s;
+  height: .5em;
+  width: 0%;
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 10;
+  background-color: steelblue;
 }
 
 #video {
@@ -178,12 +191,21 @@ a, #tracklist li, #tracklist span {
   color: steelblue;
 }
 
+a:hover, #tracklist li:hover a {
+  color: #23415a;
+}
+
+#tracklist li.active:hover a {
+  color: steelblue;
+}
+
 #tracklist li.active {
   background-color: steelblue;
 }
 
- {
-  color: lightsteelblue;
+#tracklist li.disabled, #tracklist li.disabled * {
+  color: lightgray;
+  pointer-events: none;
 }
 
 .chorus, #lyrics h2, #lyrics h1 {
@@ -201,57 +223,75 @@ a, #tracklist li, #tracklist span {
 /* scroll bars */
 
 ::-webkit-scrollbar {
- width: 6px;
- height: 6px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-button {
- width: 0px;
- height: 0px;
+  width: 0px;
+  height: 0px;
 }
 
 ::-webkit-scrollbar-thumb {
- background-color: white;
- border: 0px none white;
- border-radius: 50px;
+  background-color: white;
+  border: 0px none white;
+  border-radius: 50px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
- background-color: white;
+  background-color: white;
 }
 
 ::-webkit-scrollbar-thumb:active {
- background-color: white;
+  background-color: white;
 }
 
 ::-webkit-scrollbar-track {
- background-color: lightslategray;
- border: 0px none lightslategray;
- border-radius: 50px;
+  background-color: lightslategray;
+  border: 0px none lightslategray;
+  border-radius: 50px;
 }
 
 ::-webkit-scrollbar-track:hover {
- background-color: lightslategray;
+  background-color: lightslategray;
 }
 
 ::-webkit-scrollbar-track:active {
- background-color: lightslategray;
+  background-color: lightslategray;
 }
 
 ::-webkit-scrollbar-corner {
- background: transparent;
+  background: transparent;
 }
 
 /* hover only on computer screens */
 
-@media only screen and (min-device-width: 768px) {
+@media screen and (min-width: 42em) {
+  body {
+    max-width: 42em;
+  }
+  main {
+    text-align: center;
+    /*display: inline-block;*/
+  }
+  #tracklist {
+    width: 20.7em;
+    display: inline-block;
+    text-align: left;
+  }
+  #lyrics {
+    position: initial;
+    display: inline-block;
+    vertical-align: top;
+    text-align: left;
+  }
+  #lyrics.active {
+    width: 20em;
+  }
+  .button#info, .button#close {
+    display: none !important;
+  }
   #tracklist li:hover, #tracklist li.active:hover {
     background-color: aliceblue;
-  }
-  a:hover, #tracklist li:hover a {
-    color: #23415a;
-  }
-  #tracklist li.active:hover a {
-    color: steelblue;
   }
 }
