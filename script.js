@@ -12,6 +12,7 @@
   var tracklist = $('#tracklist li');
   var audioBox = $('#audio').first(),
     lyricsBox = $('#lyrics').first(),
+      lyrics = $('#lyrics').find('div').first(),
     videoBox = $("#video").first();
   var stopBtn = $('#stop').first(),
     infoBtn = $('#info').first(),
@@ -21,9 +22,12 @@
 
   /* set up */
 
+  //sets video for css to animate to correct aspect ratio
   videoBox.attr('height', videoH);
-  //make sure the lyrics page has the height of the tracklist
+
+  //makes sure the lyrics page has the height of the tracklist
   lyricsBox.height($('main').height());
+
   //adds the index number in front of each track on the list
   let i = 1
   tracklist.each(function() {
@@ -36,23 +40,22 @@
     let song = $(this);
     if (!song.hasClass('active')) {
 
-      //switch active song
+      //selects and updates active song
       if (activeSong !== null) {
         activeSong.removeClass('active');
       }
       activeSong = song.addClass('active').append(stopBtn.detach());
       let title = song.find('a').first().text();
 
-      //play song
+      //plays song
       audio.pause();
       audio.src = 'songs/' + title.toLocaleLowerCase() + '.mp3';
       audio.play();
       audioBox.show();
       videoBox.attr('height', 0);
 
-      //load lyrics
-      lyricsBox.find('div').first()
-        .load('lyrics/' + title.toLowerCase().replace(/ /g, "%20") + '.html', function(data, status) {
+      //loads lyrics
+      lyrics.load('lyrics/' + title.toLowerCase().replace(/ /g, "%20") + '.html', function(data, status) {
           if (status !== 'error') {
             activeSong.append(infoBtn.detach());
           }
@@ -60,6 +63,7 @@
     }
   });
 
+  //stops playing the active song
   stopBtn.click(function() {
     videoBox.attr('height', videoH);
     setTimeout(function() {
@@ -70,21 +74,23 @@
     }, 10);
   });
 
+  //opens and closes the lyrics pane
   infoBtn.click(function() {
     lyricsBox.addClass('active');
   });
-
   closeBtn.click(function() {
     lyricsBox.removeClass('active');
   });
 
   /* events */
 
+  //plays next song when the active one ends
   audio.addEventListener('ended', function() {
     let i = parseInt(activeSong.attr("index"));
     if (i < tracklist.length) {
       tracklist.eq(i).click();
     } else {
+      //stops audio upon finishing the last song
       stopBtn.click();
     }
   });
