@@ -17,6 +17,11 @@
  }
  /* Font downloaded from FontsForWeb.com */
 
+ /*
+ * {
+  box-sizing: border-box;
+}*/
+
 body {
   font-family: '33535gillsansmt', Gill Sans, Gill Sans MT, Myriad Pro, DejaVu Sans Condensed, Helvetica, Arial, " sans-serif";
   font-size: 16.4px;
@@ -72,7 +77,6 @@ footer {
 
 #audio {
   width: 100%;
-  display: none;
   position: fixed;
   bottom: 0;
   left: 0;
@@ -100,14 +104,12 @@ footer {
 /* the tracklist */
 
 #tracklist {
-  list-style-type: none;
   margin: 0;
   padding: 0 .0 .5em;
 }
 
 #tracklist li {
   padding: 0 3em;
-  width: 15em;
   display: block;
   position: relative;
 }
@@ -145,7 +147,7 @@ footer {
   right: 0;
   top: 0;
   width: 0;
-  padding: .5em 0;
+  padding: 1em 0;
   overflow-x: hidden;
   overflow-y: auto;
   white-space: nowrap;
@@ -173,18 +175,18 @@ footer {
   right: 0;
   top: 0;
   padding: .5em;
-  display: none;
   font-style: normal;
-}
-
-.active .button, #lyrics.active .button {
-  display: block;
 }
 
 .button#stop, .button#close {
   right: auto;
   left: 0;
 }
+
+.hidden{
+  display: none !important;
+}
+
 
 /* colors */
 
@@ -298,18 +300,19 @@ a:hover, #tracklist li:hover a {
     text-align: left;
   }
   #lyrics {
-    position: initial;
+    position: inherit;
     display: inline-block;
     vertical-align: top;
     text-align: left;
+    padding: .5em 0;
   }
   #lyrics.active {
     width: 20em;
   }
-  .button#info, .button#close {
-    display: none !important;
-  }
   #tracklist li:hover, #tracklist li.active:hover {
     background-color: aliceblue;
+  }
+  #info, #close{
+    display: none !important;
   }
 }

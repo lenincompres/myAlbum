@@ -1,57 +1,133 @@
 {
-  "album": {
-    "title": "Lenino, el Cantacuentos",
-    "tracks": [
-      {
-        "title": "Historias de encanto",
-        "original": "Tale of Wonder (Jeff Mach)",
-        "cover": true
-      },
-      {
-        "title": "Felices por siempre",
-        "original": "Happy Together (The Turtles)",
-        "cover": true
-      },
-      {
-        "title": "No, corazón",
-        "original": "Hold Heart (Emiliana Torrini)",
-        "cover": true
-      },
-      {
-        "title": "Cicatrices misteriosas",
-        "original": "Mystery Scars (Happy Birthday Amy)",
-        "cover": true
-      },
-      {
-        "title": "Casa en un árbol",
-        "original": "The Treehouse Song (Ane Brun)",
-        "cover": true
-      },
-      {
-        "title": "Un cómo te va",
-        "original": "Replay"
-      },
-      {
-        "title": "La Celestina",
-        "original": "(Lhasa de Sela)",
-        "cover": true
-      },
-      {
-        "title": "Tréfles",
-        "original": "Clovers"
-      },
-      {
-        "title": "Pa' no querer",
-        "original": "Not Going There"
-      },
-      {
-        "title": "Mal me traes tú",
-        "original": "Mad About You (Hooverphonics)"
-      },
-      {
-        "title": "Tú me enloqueces",
-        "original": "You Make Me Happy"
-      }
-    ]
-  }
+  "title": "Lenino, el Cantacuentos",
+  "author": "Lenino",
+  "tracks": [{
+      "label": "Acto 1"
+    },
+    {
+      "title": "Historias de encanto",
+      "original": "Tale of Wonder",
+      "author": "Jeff Mach",
+      "cover": true
+    },
+    {
+      "title": "Felices por siempre",
+      "original": "Happy Together",
+      "author": "The Turtles",
+      "cover": true
+    },
+    {
+      "title": "No, corazón",
+      "original": "Hold Heart",
+      "author": "Emiliana Torrini",
+      "cover": true
+    },
+    {
+      "title": "Cicatrices misteriosas",
+      "original": "Mystery Scars",
+      "author": "Happy Birthday Amy",
+      "cover": true
+    },
+    {
+      "title": "Casa en un árbol",
+      "original": "The Treehouse Song",
+      "author": "Ane Brun",
+      "cover": true
+    },
+    {
+      "title": "Un cómo te va",
+      "original": "Replay"
+    },
+    {
+      "title": "La Celestina",
+      "author": "Lhasa de Sela",
+      "cover": true
+    },
+    {
+      "title": "Trèfles",
+      "original": "Clovers",
+      "extra": "translated with the help of <a href='http://www.sophiedaxhelet.com/' target='_blank'>Sophie Daxhelet</a>"
+    },
+    {
+      "title": "Pa' no querer",
+      "original": "Not Going There"
+    },
+    {
+      "title": "Mal me traes tú",
+      "original": "Mad About You",
+      "author": "Hooverphonics"
+    },
+    {
+      "title": "Tú me enloqueces",
+      "original": "You Make Me Happy"
+    },
+    {
+      "label": "Acto 2"
+    },
+    {
+      "title": "Una lengua que morder",
+      "original": "Rabbit Candy Jar",
+      "cover": true
+    },
+    {
+      "title": "Zapatos al revés",
+      "original": "Tale the Tale",
+      "cover": true
+    },
+    {
+      "title": "Cantaletas",
+      "original": "Tedious Ramblings"
+    },
+    {
+      "title": "Ce Virus Irisé",
+      "original": "This Iridescent Virus",
+      "extra": "translated with the help of <a href='http://www.sophiedaxhelet.com/' target='_blank'>Sophie Daxhelet</a>"
+    },
+    {
+      "title": "De bar en bar",
+      "original": "Between the Bars",
+      "author": "Elliot Smith",
+      "cover": true
+    },
+    {
+      "title": "Compostura",
+      "original": "Composure Remains"
+    },
+    {
+      "title": "Entrevista sin malicia",
+      "original": "The Coy and the Candid"
+    },
+    {
+      "title": "Katerina Josefina",
+      "original": "Katrinah Josephina",
+      "author": "Universal Hallpass",
+      "cover": true
+    },
+    {
+      "title": "The Man Who Sold the World",
+      "author": "David Bowie",
+      "cover": true
+    },
+    {
+      "title": "La ve",
+      "original": "That Time",
+      "author": "Regina Spektor",
+      "cover": true
+    },
+    {
+      "label": "Encore"
+    },
+    {
+      "title": "Ei anillo 'e fuego",
+      "original": "The Ring of Fire",
+      "author": "Anita Carter",
+      "cover": true
+    },
+    {
+      "title": "Aves",
+      "original": "Birds",
+      "author": "Emiliana Torrini",
+      "cover": true
+    }
+  ]
 }

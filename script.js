@@ -9,78 +9,134 @@
 
   "use strict";
 
-  var audioFiles = [];
-  var tracklist = document.querySelectorAll('#tracklist li');
-  var audio = document.querySelector('#audio'),
-    //loader = $('#loader').first(),
+  var tracklist = document.querySelector('#tracklist'),
+    audio = document.querySelector('#audio'),
+    //loader = document.querySelector('#loader'),
     lyricsBox = document.querySelector('#lyrics'),
     videoBox = document.querySelector("#video"),
     stopBtn = document.querySelector('#stop'),
     infoBtn = document.querySelector('#info'),
     closeBtn = document.querySelector('#close');
-  var activeSong = null;
+  var tracksArray = [];
+  var activeSongLink = null;
   var videoH = videoBox.offsetWidth * 9 / 16;
 
+  /* Auxiliary functions */
+  function readFile(file, callback) {
+    var rawFile = new XMLHttpRequest();
+    rawFile.overrideMimeType("application/json");
+    rawFile.open("GET", file, true);
+    rawFile.onreadystatechange = function() {
+      if (rawFile.readyState === 4 && rawFile.status == "200") {
+        callback(rawFile.responseText, true);
+        return true;
+      } else {
+        callback(null, false);
+      }
+    }
+    rawFile.send(null);
+  }
+
   /* set up */
+
+  /* populates songs from json file */
+  var tracks = [];
+  readFile('album.json', function(data, success) {
+    if (success) {
+      let album = JSON.parse(data);
+      tracks = album["tracks"];
+      setUpTracks();
+    } else {
+      //unable to load album info
+    }
+  });
+
+  function setUpTracks() {
+    for (let i = 0; i < tracks.length; i++) {
+      let item = tracks[i];
+      let line = null;
+      if (item.label) {
+        line = document.createElement("h2");
+        line.innerHTML = item.label;
+      } else {
+        item.filename = item.title.toLocaleLowerCase();
+        tracksArray.push(item);
+        line = document.createElement("li");
+
+        let index = tracksArray.length;
+        let info = "";
+        if (item.original) {
+          info += item.original;
+        }
+        if (item.cover) {
+          info += " (" + item.author + ")";
+          line.classList.add("cover");
+        }
+
+        line.innerHTML = "<span>" + (index > 9 ? "" : "0") + index + ' - </span><a>' + item.title + "</a><i>" + info + "</i>";
+        line.setAttribute("index", index);
+
+        line.addEventListener("click", selectSong);
+        //line.classList.add("disabled");
+      }
+      tracklist.append(line);
+    }
+
+    //makes sure the lyrics page has the height of the tracklist
+    lyricsBox.style.height = document.querySelector('#tracklist').offsetHeight + 'px';
+  }
 
   //sets video for css to animate to correct aspect ratio
   videoBox.style.height = videoH + 'px';
 
-  //makes sure the lyrics page has the height of the tracklist
-  lyricsBox.style.height = document.querySelector('#tracklist').offsetHeight + 'px';
-
-  //adds the index number in front of each track on the list
-  var index = 1;
-  for (let i = 0; i < tracklist.length; i++) {
-    let song = tracklist[i];
-    let f = 'songs/' + song.querySelector('a').innerHTML.toLocaleLowerCase() + '.mp3';
-    audioFiles.push(f);
-
-    //preps the song link
-    let span = document.createElement("span");
-    span.innerHTML = (index > 9 ? "" : "0") + index + ' -';
-    song.prepend(span);
-    song.setAttribute("index", index++);
-    //song.classList.add("disabled");
-    song.addEventListener("click", selectSong);
-  }
-
   function selectSong(e) {
-    let song = e.target;
-    if (!song.classList.contains('active') && !song.classList.contains('disabled')) {
+    let songLink = e.currentTarget,
+      track = tracksArray[songLink.getAttribute("index") - 1];
+    if (track && !songLink.classList.contains('active') && !songLink.classList.contains('disabled')) {
 
       //selects and updates active song
-      if (activeSong !== null) {
-        activeSong.classList.remove('active');
+      if (activeSongLink !== null) {
+        activeSongLink.classList.remove('active');
       }
-      song.classList.add('active');
-      activeSong = song;
-      song.append(stopBtn);
-      song.append(infoBtn);
+      songLink.classList.add('active');
+      activeSongLink = songLink;
+      songLink.append(infoBtn); //getting an wierd error
+      songLink.append(stopBtn);
+      stopBtn.classList.remove("hidden");
 
       //plays song
       audio.pause();
-      audio.src = audioFiles[activeSong.getAttribute("index") - 1];
+      audio.src = 'songs/' + track.filename + '.mp3';
       audio.addEventListener('ended', audioEnded);
       audio.play();
-      audio.style.display = "block";
+      audio.classList.remove("hidden");
       videoBox.style.height = 0;
 
       //loads lyrics
-      let req = new XMLHttpRequest();
-      let filename = song.querySelector('a').innerHTML.toLowerCase().replace(/ /g, "%20");
-      req.open('GET', 'lyrics/' + filename + '.html');
-      req.onreadystatechange = function() {
-        if (req.readyState === 4 && req.status === 200) {
-          lyricsBox.querySelector('div').innerHTML = req.responseText;
-          infoBtn.style.display = "block";
+      readFile('lyrics/' + track.filename.replace(/ /g, "%20") + '.html', function(data, success) {
+        if (success) {
+          let lyrics = lyricsBox.querySelector('div');
+
+          /* set title info */
+          lyrics.innerHTML = "<h1>" + track.title + "</h1>";
+          if (track.cover) {
+            lyrics.innerHTML += "<h2 class='cover'>Original <i>" + track.original + "</i> de <i>" + track.author + "</i></h2>";
+            lyrics.innerHTML += "<h2>Traducción y adaptación musical de <a href='http://lenino.net' target='_blank'>Lenino</a><i></h2>";
+          } else {
+            lyrics.innerHTML += "<h2>Música y letra de <a href='http://lenino.net' target='_blank'>Lenino</a><i></h2>";
+          }
+          if (track.extra) {
+            lyrics.innerHTML += "<h2>" + track.extra + "</h2>";
+          }
+
+          lyrics.innerHTML += data;
+          infoBtn.classList.remove("hidden");
           infoBtn.click();
         } else {
-          infoBtn.style.display = "none";
+          infoBtn.classList.add("hidden");
           lyricsBox.classList.remove('active');
         }
-      };
-      req.send();
+      });
     }
   }
 
@@ -88,7 +144,7 @@
     //preloads songs
     $(document).ready(function() {
       let i = 0;
-      while (audioFiles[i]) {
+      while (tracksArray[i]) {
         var a = new Audio();
         let n = i;
         a.addEventListener('canplaythrough', function() {
@@ -98,7 +154,7 @@
           audioLoaded(parseInt(n));
         }, false);
         a.preload = 'auto';
-        a.src = audioFiles[n];
+        a.src = tracksArray[n];
         i++;
       }
     });
@@ -120,12 +176,14 @@
   stopBtn.addEventListener('click', function() {
     videoBox.style.height = videoH + 'px';
     setTimeout(function() {
-      activeSong.classList.remove('active');
-      activeSong = null;
+      activeSongLink.classList.remove('active');
+      activeSongLink = null;
       audio.pause();
-      audio.style.display = "none";
+      audio.classList.add("hidden");
     }, 10);
     closeBtn.click();
+    stopBtn.classList.add("hidden");
+    infoBtn.classList.add("hidden");
   });
 
   //opens and closes the lyrics pane
@@ -140,12 +198,11 @@
 
   //plays next song when the active one ends
   function audioEnded() {
-    let i = parseInt(activeSong.getAttribute("index"));
-    if (i < tracklist.length) {
-      tracklist.eq(i).click();
+    let i = parseInt(activeSongLink.getAttribute("index"));
+    if (i < tracksArray.length) {
+      querySelector("li[index='" + i + "']").click();
     } else {
-      //stops audio upon finishing the last song
-      stopBtn.click();
+      stopBtn.click(); //stops after last song
     }
   }
 
