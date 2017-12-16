@@ -13,13 +13,12 @@
     audio = document.querySelector('#audio'),
     //loader = document.querySelector('#loader'),
     lyricsBox = document.querySelector('#lyrics'),
-    videoBox = document.querySelector("#video"),
+    video = document.querySelector("#video"),
     stopBtn = document.querySelector('#stop'),
     infoBtn = document.querySelector('#info'),
     closeBtn = document.querySelector('#close');
-  var tracksArray = [];
   var activeSongLink = null;
-  var videoH = videoBox.offsetWidth * 9 / 16;
+  var videoH = video.offsetWidth * 9 / 16;
 
   /* Auxiliary functions */
   function readFile(file, callback) {
@@ -37,14 +36,38 @@
     rawFile.send(null);
   }
 
+  //sets video for css to animate to correct aspect ratio
+  function openVideo(src, autoplay) {
+    console.log(src);
+    if (!src) {
+      return;
+    }
+    if (autoplay) {
+      src += (src.indexOf('?') > 0 ? '&' : '?') + "autoplay=1";
+    }
+    console.log(src);
+    video.setAttribute("src", src);
+    video.style.height = videoH + 'px';
+    window.scrollTo(0, 0);
+  }
+
+  function closeVideo() {
+    video.style.height = 0;
+  }
+
   /* set up */
 
   /* populates songs from json file */
-  var tracks = [];
+  var tracks = [],
+    album;
   readFile('album.json', function(data, success) {
     if (success) {
-      let album = JSON.parse(data);
-      tracks = album["tracks"];
+      album = JSON.parse(data);
+      document.querySelector('#title').innerHTML = album.title;
+      document.querySelector('title').innerHTML = album.title;
+      document.querySelector('#notes').innerHTML = album.notes;
+      document.querySelector('#copyright').innerHTML = album.copyright;
+      openVideo(album.videoIntro);
       setUpTracks();
     } else {
       //unable to load album info
@@ -52,33 +75,31 @@
   });
 
   function setUpTracks() {
-    for (let i = 0; i < tracks.length; i++) {
-      let item = tracks[i];
+    for (let i = 0; i < album.tracks.length; i++) {
+      let item = album.tracks[i];
       let line = null;
-      if (item.label) {
-        line = document.createElement("h2");
-        line.innerHTML = item.label;
-      } else {
-        item.filename = item.title.toLocaleLowerCase();
-        tracksArray.push(item);
-        line = document.createElement("li");
-
-        let index = tracksArray.length;
-        let info = "";
-        if (item.original) {
-          info += item.original;
-        }
-        if (item.cover) {
-          info += " (" + item.author + ")";
-          line.classList.add("cover");
-        }
-
-        line.innerHTML = "<span>" + (index > 9 ? "" : "0") + index + ' - </span><a>' + item.title + "</a><i>" + info + "</i>";
-        line.setAttribute("index", index);
-
-        line.addEventListener("click", selectSong);
-        //line.classList.add("disabled");
+      if (item.section) {
+        let section = document.createElement("h2");
+        section.innerHTML = item.section;
+        tracklist.append(section);
       }
+      item.filename = item.title.toLocaleLowerCase();
+      line = document.createElement("li");
+
+      let index = i + 1;
+      let info = "";
+      if (item.original) {
+        info += item.original;
+      }
+      if (item.cover) {
+        info += " (" + item.author + ")";
+        line.classList.add("cover");
+      }
+      line.innerHTML = "<span>" + (index > 9 ? "" : "0") + index + ' - </span><a>' + item.title + "</a><i>" + info + "</i>";
+      line.setAttribute("index", index);
+
+      line.addEventListener("click", selectSong);
+      //line.classList.add("disabled");
       tracklist.append(line);
     }
 
@@ -86,12 +107,9 @@
     lyricsBox.style.height = document.querySelector('#tracklist').offsetHeight + 'px';
   }
 
-  //sets video for css to animate to correct aspect ratio
-  videoBox.style.height = videoH + 'px';
-
   function selectSong(e) {
     let songLink = e.currentTarget,
-      track = tracksArray[songLink.getAttribute("index") - 1];
+      track = album.tracks[songLink.getAttribute("index") - 1];
     if (track && !songLink.classList.contains('active') && !songLink.classList.contains('disabled')) {
 
       //selects and updates active song
@@ -100,17 +118,20 @@
       }
       songLink.classList.add('active');
       activeSongLink = songLink;
-      songLink.append(infoBtn); //getting an wierd error
       songLink.append(stopBtn);
       stopBtn.classList.remove("hidden");
 
       //plays song
       audio.pause();
-      audio.src = 'songs/' + track.filename + '.mp3';
-      audio.addEventListener('ended', audioEnded);
-      audio.play();
-      audio.classList.remove("hidden");
-      videoBox.style.height = 0;
+      if (track.video) {
+        openVideo(track.video, true);
+        audio.classList.add("hidden");
+      } else {
+        closeVideo();
+        audio.src = 'songs/' + track.filename + '.mp3';
+        audio.play();
+        audio.classList.remove("hidden");
+      }
 
       //loads lyrics
       readFile('lyrics/' + track.filename.replace(/ /g, "%20") + '.html', function(data, success) {
@@ -130,6 +151,7 @@
           }
 
           lyrics.innerHTML += data;
+          songLink.append(infoBtn);
           infoBtn.classList.remove("hidden");
           infoBtn.click();
         } else {
@@ -144,7 +166,7 @@
     //preloads songs
     $(document).ready(function() {
       let i = 0;
-      while (tracksArray[i]) {
+      while (album.tracks[i]) {
         var a = new Audio();
         let n = i;
         a.addEventListener('canplaythrough', function() {
@@ -154,7 +176,7 @@
           audioLoaded(parseInt(n));
         }, false);
         a.preload = 'auto';
-        a.src = tracksArray[n];
+        a.src = album.tracks[n];
         i++;
       }
     });
@@ -174,16 +196,8 @@
 
   //stops playing the active song
   stopBtn.addEventListener('click', function() {
-    videoBox.style.height = videoH + 'px';
-    setTimeout(function() {
-      activeSongLink.classList.remove('active');
-      activeSongLink = null;
-      audio.pause();
-      audio.classList.add("hidden");
-    }, 10);
-    closeBtn.click();
-    stopBtn.classList.add("hidden");
-    infoBtn.classList.add("hidden");
+    stopSong();
+    openVideo(album.videoIntro);
   });
 
   //opens and closes the lyrics pane
@@ -197,13 +211,27 @@
   /* events */
 
   //plays next song when the active one ends
+  function stopSong() {
+    setTimeout(function() {
+      activeSongLink.classList.remove('active');
+      activeSongLink = null;
+      audio.pause();
+      audio.classList.add("hidden");
+    }, 10);
+    closeBtn.click();
+    stopBtn.classList.add("hidden");
+    infoBtn.classList.add("hidden");
+  }
+
   function audioEnded() {
     let i = parseInt(activeSongLink.getAttribute("index"));
-    if (i < tracksArray.length) {
-      querySelector("li[index='" + i + "']").click();
+    if (i < album.tracks.length) {
+      tracklist.querySelectorAll("li")[i].click();
     } else {
-      stopBtn.click(); //stops after last song
+      stopSong();
+      openVideo(album.videoOutro, true);
     }
   }
+  audio.addEventListener('ended', audioEnded);
 
 })();
