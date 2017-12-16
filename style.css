@@ -3,6 +3,20 @@
  * @author Lenin Compres <lenincompres@gmail.com>
  **/
 
+ @viewport{
+  width: device-width;
+ }
+ @font-face {
+ 	font-family: '33535gillsansmt';
+ 	src: url('font/33535gillsansmt.eot');
+ 	src: local('font/33535gillsansmt'), url('font/33535gillsansmt.woff') format('woff'), url('font/33535gillsansmt.ttf') format('truetype');
+ }
+ /* use this class to attach this font to any element i.e. <p class="fontsforweb_fontid_1416">Text with this font applied</p> */
+ .fontsforweb_fontid_1416 {
+ 	font-family: '33535gillsansmt' !important;
+ }
+ /* Font downloaded from FontsForWeb.com */
+
 body {
   font-family: '33535gillsansmt', Gill Sans, Gill Sans MT, Myriad Pro, DejaVu Sans Condensed, Helvetica, Arial, " sans-serif";
   font-size: 16.4px;
@@ -101,6 +115,10 @@ footer {
 #tracklist li span {
   font-size: .68em;
   font-style: normal;
+}
+
+#tracklist li a {
+  pointer-events: none;
 }
 
 #tracklist li i {
