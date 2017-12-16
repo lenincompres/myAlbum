@@ -1,10 +1,13 @@
 {
-  "title": "Lenino, el Cantacuentos",
+  "title": "Lenino, el cantacuentos",
   "author": "Lenino",
-  "tracks": [{
-      "label": "Acto 1"
-    },
+  "notes": "<p>Estas canciones son grabadas a voz y piano en vivo con fines de ensayo y colaboración del artista. Por favor, <b>no comparta este hipervínculo</b>. Para cualquier otro uso, contacte a <a href='http://lenino.net/#contact' target='_blank'>lenino.net</a>.</p><p><i>These songs are recorded live with piano and voice to be used for the artist's rehearsals and collaborations. Please, <b>do not share this link</b>. For any other use, please contact <a href='http://lenino.net/#contact' target='_blank'>lenino.net</a>.</i></p>",
+  "copyright": "Lenin Compres, 2016.",
+  "videoIntro": "https://www.youtube.com/embed/H7mlFUaMyoA",
+  "videoOutro": "https://www.youtube.com/embed/Fr4daDGACKs",
+  "tracks": [
     {
+      "section": "Acto 1",
       "title": "Historias de encanto",
       "original": "Tale of Wonder",
       "author": "Jeff Mach",
@@ -62,9 +65,7 @@
       "original": "You Make Me Happy"
     },
     {
-      "label": "Acto 2"
-    },
-    {
+      "section": "Acto 2",
       "title": "Una lengua que morder",
       "original": "Rabbit Candy Jar",
       "cover": true
@@ -112,12 +113,11 @@
       "title": "La ve",
       "original": "That Time",
       "author": "Regina Spektor",
+      "video": "https://www.youtube.com/embed/Fr4daDGACKs?start=18",
       "cover": true
     },
     {
-      "label": "Encore"
-    },
-    {
+      "section": "Encore",
       "title": "Ei anillo 'e fuego",
       "original": "The Ring of Fire",
       "author": "Anita Carter",
